@@ -2,71 +2,79 @@
 <html lang="zh-TW">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 <title>System Log Out - 貍想教育創新學院</title>
 <style>
-  /* 基本重置與全螢幕設定 */
-  body { margin: 0; padding: 0; background: black; color: #0F0; font-family: 'Courier New', Courier, monospace; overflow: hidden; }
+  /* === 基本重置與全螢幕設定 === */
+  * { box-sizing: border-box; }
+  body { margin: 0; padding: 0; background: black; color:  #FF0000; font-family: 'Courier New', Courier, monospace; overflow: hidden; }
   
   /* 數位瀑布畫布 */
   canvas { display: block; position: absolute; top: 0; left: 0; z-index: 1; transition: opacity 1.5s ease-in-out; }
   
-  /* 中央輸入介面 */
+  /* === 中央輸入介面 (UI Layer) === */
   #ui-layer { 
     position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); 
     z-index: 2; text-align: center; background: rgba(0, 20, 0, 0.85); 
-    padding: 40px 50px; border: 1px solid #0F0; box-shadow: 0 0 30px #0F0; 
-    border-radius: 5px; backdrop-filter: blur(5px); transition: opacity 0.5s ease-out;
+    padding: 40px; border: 1px solid #0F0; box-shadow: 0 0 30px #0F0; 
+    border-radius: 8px; backdrop-filter: blur(5px); transition: opacity 0.5s ease-out;
+    width: 90%; max-width: 500px; /* 限制最大寬度，並允許在小螢幕縮放 */
   }
   
-  /* 標題與閃爍效果 */
-  h1 { font-size: 2em; letter-spacing: 3px; text-shadow: 0 0 10px #0F0; margin-bottom: 10px; animation: glitch 3s infinite; }
-  p { font-size: 1.1em; color: #8f8; margin-bottom: 30px; letter-spacing: 1px; }
+  h1 { font-size: 2rem; letter-spacing: 2px; text-shadow: 0 0 10px #0F0; margin: 0 0 15px 0; animation: glitch 3s infinite; line-height: 1.2; }
+  p { font-size: 1rem; color: #8f8; margin-bottom: 25px; letter-spacing: 1px; line-height: 1.4; }
   
-  /* 密碼輸入框 */
   input { 
     background: black; color: #0F0; border: 1px solid #0F0; padding: 15px; 
-    font-size: 1.5em; text-align: center; font-family: 'Courier New', monospace; 
-    outline: none; width: 80%; letter-spacing: 5px; transition: 0.3s;
+    font-size: 1.5rem; text-align: center; font-family: 'Courier New', monospace; 
+    outline: none; width: 100%; letter-spacing: 3px; transition: 0.3s;
+    border-radius: 4px;
   }
   input:focus { box-shadow: 0 0 15px #0F0; background: rgba(0, 50, 0, 0.5); }
   
-  /* 登出按鈕 */
   button { 
     background: transparent; color: #0F0; border: 2px solid #0F0; 
-    padding: 12px 30px; font-size: 1.2em; margin-top: 30px; cursor: pointer; 
+    padding: 12px 30px; font-size: 1.2rem; margin-top: 25px; cursor: pointer; 
     font-weight: bold; font-family: 'Courier New', monospace; letter-spacing: 2px;
-    transition: 0.3s;
+    transition: 0.3s; border-radius: 4px; width: 100%;
   }
   button:hover { background: #0F0; color: black; box-shadow: 0 0 20px #0F0; }
 
-  /* 成功登出後的畫面 (影片與結語) */
+  /* === 成功登出後的畫面 (影片與結語) === */
   #success-screen { 
     display: none; position: absolute; top: 0; left: 0; width: 100vw; height: 100vh; 
     background: #050505; z-index: 3; flex-direction: column; 
     justify-content: center; align-items: center; opacity: 0; transition: opacity 2s ease-in-out;
+    padding: 20px;
   }
   
-  /* HTML5 影片容器設定 */
   .video-container {
-    width: 80%; max-width: 800px;
-    box-shadow: 0 0 40px rgba(0, 255, 0, 0.4); border-radius: 10px; overflow: hidden;
-    background: #000;
+    width: 100%; max-width: 800px;
+    aspect-ratio: 16 / 9; /* 現代寫法：自動維持 16:9 比例 */
+    box-shadow: 0 0 30px rgba(0, 255, 0, 0.3); border-radius: 10px; overflow: hidden;
+    background: #000; display: flex; justify-content: center; align-items: center;
   }
   
-  video { width: 100%; display: block; outline: none; }
+  video { width: 100%; height: 100%; outline: none; object-fit: contain; }
   
-  /* 延遲浮現的最終結語 */
   .welcome-text { 
-    font-size: 2em; margin-top: 40px; color: #fff; letter-spacing: 4px;
-    text-shadow: 0 0 20px #0F0, 0 0 10px #0F0; font-weight: bold;
+    font-size: 1.8rem; margin-top: 30px; color: #fff; letter-spacing: 3px;
+    text-shadow: 0 0 15px #0F0, 0 0 5px #0F0; font-weight: bold;
     text-align: center; line-height: 1.5;
-    opacity: 0; /* 初始隱藏 */
-    animation: fadeInText 2s ease-in-out forwards;
-    animation-delay: 3.5s; /* 延遲 3.5 秒才開始浮現，配合影片節奏 */
+    opacity: 0; animation: fadeInText 2s ease-in-out forwards; animation-delay: 3.5s; 
   }
 
-  /* 動畫設定 */
+  /* === 手機版 RWD 響應式設定 (螢幕寬度小於 768px) === */
+  @media screen and (max-width: 768px) {
+    #ui-layer { padding: 30px 20px; }
+    h1 { font-size: 1.5rem; }
+    p { font-size: 0.9rem; margin-bottom: 20px; }
+    input { font-size: 1.2rem; padding: 12px; letter-spacing: 2px; }
+    button { font-size: 1.1rem; padding: 12px; margin-top: 20px; }
+    .welcome-text { font-size: 1.3rem; margin-top: 25px; letter-spacing: 2px; }
+  }
+
+  /* === 動畫設定 === */
   @keyframes glitch {
     0% { opacity: 1; transform: translate(0); }
     2% { opacity: 0.8; transform: translate(-2px, 2px); }
@@ -74,7 +82,7 @@
     6% { opacity: 0.9; transform: translate(0); }
     100% { opacity: 1; transform: translate(0); }
   }
-  @keyframes fadeInText { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+  @keyframes fadeInText { from { opacity: 0; transform: translateY(15px); } to { opacity: 1; transform: translateY(0); } }
 </style>
 </head>
 <body>
@@ -82,10 +90,9 @@
   <canvas id="matrix"></canvas>
 
   <div id="ui-layer">
-    <h1>系統警告：黃磚路正在瓦解</h1>
+    <h1>系統警告：<br>黃磚路正在瓦解</h1>
     <p>Please enter the final coordinate to LOG OUT.</p>
     <input type="text" id="pwd" placeholder="___.___.___" autocomplete="off">
-    <br>
     <button onclick="checkPwd()">[ 確 認 傳 送 ]</button>
   </div>
 
@@ -105,26 +112,33 @@
     // --- 駭客任務代碼瀑布特效 ---
     const canvas = document.getElementById('matrix');
     const ctx = canvas.getContext('2d');
-    canvas.width = window.innerWidth;
-    canvas.height = window.innerHeight;
+    
+    let fontSize = 16;
+    let columns, drops;
+
+    function initMatrix() {
+      canvas.width = window.innerWidth;
+      canvas.height = window.innerHeight;
+      columns = Math.floor(canvas.width / fontSize);
+      drops = [];
+      for(let x = 0; x < columns; x++) drops[x] = Math.random() * -100; // 讓初始下落隨機化
+    }
+    initMatrix();
 
     const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789@#$%^&*黃磚路正在瓦解波玻貍登出西門町'.split('');
-    const fontSize = 16;
-    const columns = canvas.width / fontSize;
-    const drops = [];
-    for(let x = 0; x < columns; x++) drops[x] = 1;
-
-    let matrixInterval = setInterval(drawMatrix, 35);
+    let matrixInterval = setInterval(drawMatrix, 40);
 
     function drawMatrix() {
-      ctx.fillStyle = 'rgba(0, 0, 0, 0.05)';
+      ctx.fillStyle = 'rgba(0, 0, 0, 0.08)'; // 調整殘影透明度
       ctx.fillRect(0, 0, canvas.width, canvas.height);
       ctx.fillStyle = '#0F0';
       ctx.font = fontSize + 'px Courier New';
 
       for(let i = 0; i < drops.length; i++) {
-        const text = chars[Math.floor(Math.random() * chars.length)];
-        ctx.fillText(text, i * fontSize, drops[i] * fontSize);
+        if(drops[i] * fontSize >= 0) { // 只繪製在畫面內的文字
+            const text = chars[Math.floor(Math.random() * chars.length)];
+            ctx.fillText(text, i * fontSize, drops[i] * fontSize);
+        }
         if(drops[i] * fontSize > canvas.height && Math.random() > 0.975) drops[i] = 0;
         drops[i]++;
       }
@@ -133,9 +147,7 @@
     // --- 密碼驗證邏輯 ---
     function checkPwd() {
       const pwd = document.getElementById('pwd').value.trim();
-      
-      // ✅ 您可在此處修改您的通關密碼
-      const validPasswords = ['127.0.0.1', '3652', '11.2233', '黃磚路在腳下'];
+      const validPasswords = ['127.0.0.1', '3652', '11.2233', '黃磚路在腳下', '25.0441, 121.5065'];
 
       if(validPasswords.includes(pwd)) {
         // 1. 隱藏輸入介面
@@ -147,16 +159,15 @@
         clearInterval(matrixInterval);
         canvas.style.opacity = '0';
         
-        // 3. 延遲 1 秒後，淡入影片區塊並觸發自動播放
+        // 3. 淡入影片區塊並觸發自動播放
         setTimeout(() => {
           const successScreen = document.getElementById('success-screen');
           successScreen.style.display = 'flex';
           
           setTimeout(() => { 
             successScreen.style.opacity = '1'; 
-            // 透過 JavaScript 觸發影片播放
             const finalVideo = document.getElementById('finalVideo');
-            finalVideo.play().catch(e => console.log("影片自動播放失敗，可能是瀏覽器限制：", e));
+            finalVideo.play().catch(e => console.log("影片播放需使用者進一步授權", e));
           }, 50);
         }, 1000);
       } else {
@@ -170,10 +181,16 @@
       if (e.key === 'Enter') { checkPwd(); }
     });
 
-    // 視窗縮放時自動調整畫布大小
+    // 視窗縮放或手機轉向時，動態更新畫布與瀑布數量
     window.addEventListener('resize', () => {
+      const oldWidth = canvas.width;
       canvas.width = window.innerWidth;
       canvas.height = window.innerHeight;
+      
+      const newColumns = Math.floor(canvas.width / fontSize);
+      if(newColumns > drops.length) {
+          for(let x = drops.length; x < newColumns; x++) drops[x] = 0;
+      }
     });
   </script>
 
