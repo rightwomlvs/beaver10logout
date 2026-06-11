@@ -7,7 +7,7 @@
 <style>
   /* === 基本重置與全螢幕設定 === */
   * { box-sizing: border-box; }
-  body { margin: 0; padding: 0; background: black; color:  #FF0000; font-family: 'Courier New', Courier, monospace; overflow: hidden; }
+  body { margin: 0; padding: 0; background: black; color: #0F0; font-family: 'Courier New', Courier, monospace; overflow: hidden; }
   
   /* 數位瀑布畫布 */
   canvas { display: block; position: absolute; top: 0; left: 0; z-index: 1; transition: opacity 1.5s ease-in-out; }
@@ -26,8 +26,8 @@
   
   input { 
     background: black; color: #0F0; border: 1px solid #0F0; padding: 15px; 
-    font-size: 1.5rem; text-align: center; font-family: 'Courier New', monospace; 
-    outline: none; width: 100%; letter-spacing: 3px; transition: 0.3s;
+    font-size: 1.2rem; text-align: center; font-family: 'Courier New', monospace; 
+    outline: none; width: 100%; letter-spacing: 2px; transition: 0.3s;
     border-radius: 4px;
   }
   input:focus { box-shadow: 0 0 15px #0F0; background: rgba(0, 50, 0, 0.5); }
@@ -69,7 +69,7 @@
     #ui-layer { padding: 30px 20px; }
     h1 { font-size: 1.5rem; }
     p { font-size: 0.9rem; margin-bottom: 20px; }
-    input { font-size: 1.2rem; padding: 12px; letter-spacing: 2px; }
+    input { font-size: 1rem; padding: 12px; letter-spacing: 1px; }
     button { font-size: 1.1rem; padding: 12px; margin-top: 20px; }
     .welcome-text { font-size: 1.3rem; margin-top: 25px; letter-spacing: 2px; }
   }
@@ -92,7 +92,7 @@
   <div id="ui-layer">
     <h1>系統警告：<br>黃磚路正在瓦解</h1>
     <p>Please enter the final coordinate to LOG OUT.</p>
-    <input type="text" id="pwd" placeholder="___.___.___" autocomplete="off">
+    <input type="text" id="pwd" placeholder="__.____° N, ___.____° E" autocomplete="off">
     <button onclick="checkPwd()">[ 確 認 傳 送 ]</button>
   </div>
 
@@ -146,10 +146,22 @@
 
     // --- 密碼驗證邏輯 ---
     function checkPwd() {
-      const pwd = document.getElementById('pwd').value.trim();
-      const validPasswords = ['127.0.0.1', '3652', '11.2233', '黃磚路在腳下', '25.0441, 121.5065'];
+      // 取得玩家輸入的值，並轉換為大寫以容忍小寫的 n, e
+      const pwdRaw = document.getElementById('pwd').value.trim().toUpperCase();
+      
+      // ✅ 為了防止玩家因為多一個空白或少一個符號卡關，建立寬容比對陣列
+      const validPasswords = [
+        '25.0422° N, 121.5080° E', // 標準格式
+        '25.0422°N, 121.5080°E',   // 無空白格式
+        '25.0422° N,121.5080° E',  // 逗號後無空白
+        '25.0422 N, 121.5080 E',   // 無度數符號
+        '25.0422N, 121.5080E',     // 最簡格式
+        '25.0422, 121.5080',       // 只有數字
+        '25.0422,121.5080'         // 只有數字無空白
+      ];
 
-      if(validPasswords.includes(pwd)) {
+      // 檢查輸入的值是否在寬容陣列中
+      if(validPasswords.includes(pwdRaw)) {
         // 1. 隱藏輸入介面
         const uiLayer = document.getElementById('ui-layer');
         uiLayer.style.opacity = '0';
