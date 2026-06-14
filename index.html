@@ -15,28 +15,50 @@
   /* === 中央輸入介面 (UI Layer) === */
   #ui-layer { 
     position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); 
-    z-index: 2; text-align: center; background: rgba(0, 20, 0, 0.85); 
-    padding: 40px; border: 1px solid #0F0; box-shadow: 0 0 30px #0F0; 
+    z-index: 2; text-align: center; background: rgba(0, 15, 0, 0.85); 
+    padding: 40px 30px; border: 1px solid #0F0; box-shadow: 0 0 30px #0F0; 
     border-radius: 8px; backdrop-filter: blur(5px); transition: opacity 0.5s ease-out;
-    width: 90%; max-width: 500px; /* 限制最大寬度，並允許在小螢幕縮放 */
+    width: 95%; max-width: 650px; 
   }
   
-  h1 { font-size: 2rem; letter-spacing: 2px; text-shadow: 0 0 10px #0F0; margin: 0 0 15px 0; animation: glitch 3s infinite; line-height: 1.2; }
-  p { font-size: 1rem; color: #8f8; margin-bottom: 25px; letter-spacing: 1px; line-height: 1.4; }
+  h1 { font-size: 2.2rem; letter-spacing: 3px; text-shadow: 0 0 15px #0F0; margin: 0 0 15px 0; animation: glitch 3s infinite; line-height: 1.3; }
+  p { font-size: 1.1rem; color: #8f8; margin-bottom: 25px; letter-spacing: 1.5px; line-height: 1.4; }
   
-  input { 
-    background: black; color: #0F0; border: 1px solid #0F0; padding: 15px; 
-    font-size: 1.2rem; text-align: center; font-family: 'Courier New', monospace; 
-    outline: none; width: 100%; letter-spacing: 2px; transition: 0.3s;
-    border-radius: 4px;
+  /* === 一格格密碼輸入區設計 === */
+  .coord-container {
+    border: 1px solid #0F0;
+    padding: 20px 10px;
+    border-radius: 6px;
+    margin-bottom: 25px;
+    background: rgba(0, 30, 0, 0.4);
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
   }
-  input:focus { box-shadow: 0 0 15px #0F0; background: rgba(0, 50, 0, 0.5); }
+
+  .coord-row {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 6px;
+  }
+
+  .coord-box { 
+    background: black; color: #0F0; border: 1px solid #0F0; 
+    width: 35px; height: 45px; font-size: 1.5rem; text-align: center; 
+    font-family: 'Courier New', monospace; border-radius: 4px;
+    transition: 0.2s; outline: none;
+  }
+  .coord-box:focus { box-shadow: 0 0 10px #0F0; background: rgba(0, 60, 0, 0.6); transform: scale(1.05); border-width: 2px; }
   
+  .symbol { color: #8f8; font-size: 1.4rem; font-family: 'Courier New', monospace; margin: 0 2px; text-shadow: 0 0 5px #0F0; font-weight: bold; }
+
   button { 
-    background: transparent; color: #0F0; border: 2px solid #0F0; 
-    padding: 12px 30px; font-size: 1.2rem; margin-top: 25px; cursor: pointer; 
-    font-weight: bold; font-family: 'Courier New', monospace; letter-spacing: 2px;
-    transition: 0.3s; border-radius: 4px; width: 100%;
+    background: transparent; color: #0F0; border: 1px solid #0F0; 
+    padding: 15px 30px; font-size: 1.3rem; cursor: pointer; 
+    font-weight: bold; font-family: 'Courier New', monospace; letter-spacing: 5px;
+    transition: 0.3s; border-radius: 6px; width: 100%;
   }
   button:hover { background: #0F0; color: black; box-shadow: 0 0 20px #0F0; }
 
@@ -49,9 +71,8 @@
   }
   
   .video-container {
-    width: 100%; max-width: 800px;
-    aspect-ratio: 16 / 9; /* 現代寫法：自動維持 16:9 比例 */
-    box-shadow: 0 0 30px rgba(0, 255, 0, 0.3); border-radius: 10px; overflow: hidden;
+    width: 100%; max-width: 800px; aspect-ratio: 16 / 9; 
+    box-shadow: 0 0 40px rgba(0, 255, 0, 0.3); border-radius: 10px; overflow: hidden;
     background: #000; display: flex; justify-content: center; align-items: center;
   }
   
@@ -64,14 +85,17 @@
     opacity: 0; animation: fadeInText 2s ease-in-out forwards; animation-delay: 3.5s; 
   }
 
-  /* === 手機版 RWD 響應式設定 (螢幕寬度小於 768px) === */
+  /* === 手機版 RWD 響應式設定 === */
   @media screen and (max-width: 768px) {
-    #ui-layer { padding: 30px 20px; }
-    h1 { font-size: 1.5rem; }
+    #ui-layer { padding: 30px 15px; }
+    h1 { font-size: 1.6rem; }
     p { font-size: 0.9rem; margin-bottom: 20px; }
-    input { font-size: 1rem; padding: 12px; letter-spacing: 1px; }
-    button { font-size: 1.1rem; padding: 12px; margin-top: 20px; }
-    .welcome-text { font-size: 1.3rem; margin-top: 25px; letter-spacing: 2px; }
+    .coord-container { padding: 15px 5px; gap: 10px; }
+    .coord-row { gap: 3px; }
+    .coord-box { width: 28px; height: 38px; font-size: 1.2rem; }
+    .symbol { font-size: 1.2rem; margin: 0; }
+    button { font-size: 1.2rem; padding: 12px; }
+    .welcome-text { font-size: 1.3rem; margin-top: 25px; }
   }
 
   /* === 動畫設定 === */
@@ -92,7 +116,31 @@
   <div id="ui-layer">
     <h1>系統警告：<br>黃磚路正在瓦解</h1>
     <p>Please enter the final coordinate to LOG OUT.</p>
-    <input type="text" id="pwd" placeholder="__.____° N, ___.____° E" autocomplete="off">
+    
+    <div class="coord-container">
+      <div class="coord-row">
+        <input type="text" class="coord-box" maxlength="1" data-index="0">
+        <input type="text" class="coord-box" maxlength="1" data-index="1">
+        <span class="symbol">.</span>
+        <input type="text" class="coord-box" maxlength="1" data-index="2">
+        <input type="text" class="coord-box" maxlength="1" data-index="3">
+        <input type="text" class="coord-box" maxlength="1" data-index="4">
+        <input type="text" class="coord-box" maxlength="1" data-index="5">
+        <span class="symbol">&deg; N,</span>
+      </div>
+      <div class="coord-row">
+        <input type="text" class="coord-box" maxlength="1" data-index="6">
+        <input type="text" class="coord-box" maxlength="1" data-index="7">
+        <input type="text" class="coord-box" maxlength="1" data-index="8">
+        <span class="symbol">.</span>
+        <input type="text" class="coord-box" maxlength="1" data-index="9">
+        <input type="text" class="coord-box" maxlength="1" data-index="10">
+        <input type="text" class="coord-box" maxlength="1" data-index="11">
+        <input type="text" class="coord-box" maxlength="1" data-index="12">
+        <span class="symbol">&deg; E</span>
+      </div>
+    </div>
+
     <button onclick="checkPwd()">[ 確 認 傳 送 ]</button>
   </div>
 
@@ -102,7 +150,6 @@
         <source src="https://www.dropbox.com/scl/fi/qn73nfttjbjvgmcv6xwe5/logout-video.mp4?rlkey=cl13tpq3od6nxt14g16ajqm3y&st=8udbzx2v&raw=1" type="video/mp4">
       </video>
     </div>
-    
     <div class="welcome-text">
       世界就是一場盛大的遊戲－－請前往西門町，尋找起始NPC，開啟新的任務線。
     </div>
@@ -121,7 +168,7 @@
       canvas.height = window.innerHeight;
       columns = Math.floor(canvas.width / fontSize);
       drops = [];
-      for(let x = 0; x < columns; x++) drops[x] = Math.random() * -100; // 讓初始下落隨機化
+      for(let x = 0; x < columns; x++) drops[x] = Math.random() * -100;
     }
     initMatrix();
 
@@ -129,13 +176,13 @@
     let matrixInterval = setInterval(drawMatrix, 40);
 
     function drawMatrix() {
-      ctx.fillStyle = 'rgba(0, 0, 0, 0.08)'; // 調整殘影透明度
+      ctx.fillStyle = 'rgba(0, 0, 0, 0.08)';
       ctx.fillRect(0, 0, canvas.width, canvas.height);
       ctx.fillStyle = '#0F0';
       ctx.font = fontSize + 'px Courier New';
 
       for(let i = 0; i < drops.length; i++) {
-        if(drops[i] * fontSize >= 0) { // 只繪製在畫面內的文字
+        if(drops[i] * fontSize >= 0) {
             const text = chars[Math.floor(Math.random() * chars.length)];
             ctx.fillText(text, i * fontSize, drops[i] * fontSize);
         }
@@ -144,24 +191,64 @@
       }
     }
 
+    // --- OTP 方格輸入邏輯 (自動跳格、退格、貼上) ---
+    const inputs = document.querySelectorAll('.coord-box');
+    
+    inputs.forEach((input, index) => {
+      // 處理輸入與自動跳到下一格
+      input.addEventListener('input', () => {
+        // 只保留最後輸入的字元，確保只能輸入一碼數字
+        input.value = input.value.replace(/[^0-9]/g, '').slice(-1);
+        if (input.value !== '' && index < inputs.length - 1) {
+          inputs[index + 1].focus();
+        }
+      });
+
+      // 處理 Backspace 鍵自動退回上一格，以及 Enter 鍵送出
+      input.addEventListener('keydown', (e) => {
+        if (e.key === 'Backspace' && input.value === '') {
+          if (index > 0) {
+            inputs[index - 1].focus();
+            inputs[index - 1].value = ''; // 刪除前一格的內容
+          }
+        } else if (e.key === 'Enter') {
+          checkPwd();
+        }
+      });
+
+      // 處理智慧貼上功能 (過濾符號，自動填入各格)
+      input.addEventListener('paste', (e) => {
+        e.preventDefault();
+        const pasteData = e.clipboardData.getData('text');
+        // 過濾掉所有非數字字元
+        const digits = pasteData.replace(/\D/g, ''); 
+        
+        let currIdx = index;
+        for (let i = 0; i < digits.length; i++) {
+          if (currIdx < inputs.length) {
+            inputs[currIdx].value = digits[i];
+            currIdx++;
+          }
+        }
+        // 聚焦到最後一個填入的格子或最後一格
+        if (currIdx < inputs.length) {
+          inputs[currIdx].focus();
+        } else {
+          inputs[inputs.length - 1].focus();
+        }
+      });
+    });
+
     // --- 密碼驗證邏輯 ---
     function checkPwd() {
-      // 取得玩家輸入的值，並轉換為大寫以容忍小寫的 n, e
-      const pwdRaw = document.getElementById('pwd').value.trim().toUpperCase();
+      // 收集所有方格內的數字
+      let pwdRaw = '';
+      inputs.forEach(input => pwdRaw += input.value);
       
-      // ✅ 為了防止玩家因為多一個空白或少一個符號卡關，建立寬容比對陣列
-      const validPasswords = [
-        '25.0422° N, 121.5080° E', // 標準格式
-        '25.0422°N, 121.5080°E',   // 無空白格式
-        '25.0422° N,121.5080° E',  // 逗號後無空白
-        '25.0422 N, 121.5080 E',   // 無度數符號
-        '25.0422N, 121.5080E',     // 最簡格式
-        '25.0422, 121.5080',       // 只有數字
-        '25.0422,121.5080'         // 只有數字無空白
-      ];
+      // 目標座標：25.0422 N, 121.5080 E => 純數字密碼為 2504221215080
+      const targetPwd = '2504221215080';
 
-      // 檢查輸入的值是否在寬容陣列中
-      if(validPasswords.includes(pwdRaw)) {
+      if(pwdRaw === targetPwd) {
         // 1. 隱藏輸入介面
         const uiLayer = document.getElementById('ui-layer');
         uiLayer.style.opacity = '0';
@@ -179,26 +266,21 @@
           setTimeout(() => { 
             successScreen.style.opacity = '1'; 
             const finalVideo = document.getElementById('finalVideo');
-            finalVideo.play().catch(e => console.log("影片播放需使用者進一步授權", e));
+            finalVideo.play().catch(e => console.log("需使用者進一步授權播放", e));
           }, 50);
         }, 1000);
       } else {
         alert('❌ 座標錯誤：無法鎖定傳送目標 / Access Denied');
-        document.getElementById('pwd').value = '';
+        // 錯誤時清空所有格子並將游標移回第一格
+        inputs.forEach(i => i.value = '');
+        inputs[0].focus();
       }
     }
 
-    // 支援按 Enter 鍵送出
-    document.getElementById('pwd').addEventListener('keypress', function (e) {
-      if (e.key === 'Enter') { checkPwd(); }
-    });
-
-    // 視窗縮放或手機轉向時，動態更新畫布與瀑布數量
+    // 視窗縮放或手機轉向時，動態更新畫布
     window.addEventListener('resize', () => {
-      const oldWidth = canvas.width;
       canvas.width = window.innerWidth;
       canvas.height = window.innerHeight;
-      
       const newColumns = Math.floor(canvas.width / fontSize);
       if(newColumns > drops.length) {
           for(let x = drops.length; x < newColumns; x++) drops[x] = 0;
