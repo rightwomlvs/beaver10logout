@@ -146,8 +146,8 @@
 
   <div id="success-screen">
     <div class="video-container">
-      <video id="finalVideo" playsinline preload="auto">
-        <source src="https://www.dropbox.com/scl/fi/t2yvqfq718qll65n27h65/Beaver10logout-to-Ximen.mp4?rlkey=rtsqpx7nr925as3w2gdzm0tda&st=nb9qs8l6&raw=1" type="video/mp4">
+      <video id="finalVideo" playsinline preload="auto" muted>
+        <source src="https://github.com/rightwomlvs/beaver10logout/releases/download/v1.0/Ximen.mp4.mp4" type="video/mp4">
       </video>
     </div>
     <div class="welcome-text">
@@ -266,7 +266,10 @@
           setTimeout(() => { 
             successScreen.style.opacity = '1'; 
             const finalVideo = document.getElementById('finalVideo');
-            finalVideo.play().catch(e => console.log("需使用者進一步授權播放", e));
+            finalVideo.muted = true;
+            finalVideo.play().then(() => {
+              finalVideo.muted = false;
+            }).catch(e => console.log("需使用者進一步授權播放", e));
           }, 50);
         }, 1000);
       } else {
